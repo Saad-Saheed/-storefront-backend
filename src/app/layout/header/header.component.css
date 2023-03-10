@@ -1,0 +1,32 @@
+/* .header {
+  text-align: center;
+  background: #33B5E5;
+  color: #fff;
+  padding: 12px;
+}*/
+
+a {
+  color: #ffffff !important;
+}
+
+.navbar-toggler{
+  border: none;
+}
+.navbar-toggler:focus{
+  box-shadow: none;
+}
+.navbar-brand {
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 1.6rem;
+  color: #ffffff;
+  text-transform: capitalize !important;
+  text-shadow: 1px 1px 5px yellow;
+  font-style: italic;
+}
+
+@media only screen and (max-width: 768px) {
+  .cartBadge{
+    top: 7px !important;
+    left: 13% !important;
+  }
+}

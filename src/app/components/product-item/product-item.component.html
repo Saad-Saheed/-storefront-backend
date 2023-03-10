@@ -1,0 +1,38 @@
+<div class="card shadow-sm">
+  <div class="card-image position-relative">
+    <a routerLink='/products/{{ product.id }}'>
+      <span class="btn-lg price rounded-pill">₦{{ product.price }}</span>
+      <img src="{{ product.url }}" class="hostel-image rounded-top" alt="product-img">
+      <span class="card-title">
+        <span>{{ product.category }}</span>
+      </span>
+    </a>
+  </div>
+
+  <ul class="card-action-buttons">
+    <li class="">
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/products/{{ product.id }}" target="_blank"
+        class="btn-floating rounded-circle waves-effect waves-light white">
+        <fa-icon style="color: #984CF3;" [icon]="Sicon.faShareAlt"></fa-icon>
+      </a>
+    </li>
+  </ul>
+  <div class="card-content">
+    <div class="row">
+      <div class="col s12">
+        <p>
+          <strong>{{ product.name }}</strong><br />
+          {{ product.description }}
+        </p>
+      </div>
+<!-- (totalCart)="cartQty($event)" -->
+    </div>
+    <div class="row">
+      <div class="border-top pt-2" style="width: 98%; margin: auto;">
+        <div class="actions d-flex align-items-center">
+          <app-add-to-cart-form class="w-100" [product]="product" ></app-add-to-cart-form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

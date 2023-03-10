@@ -1,0 +1,14 @@
+.quantity{
+  display: inline-block;
+  /* height: 32px; */
+  outline: none;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: rgba(152, 76, 243, 0.9);
+  line-height: 32px;
+  padding: 0 1.6rem;
+  border-radius: 8px;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  border: 1px solid #984CF3;
+}
