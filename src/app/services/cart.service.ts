@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Cart } from '../models/cart';
 import { CartProduct } from '../models/cartproduct';
 import { Checkout } from '../models/checkout';
+import { Product } from '../models/product';
 import { HttpService } from './http.service';
 
 @Injectable({
@@ -16,7 +17,7 @@ export class CartService {
     creditcard: 0,
     totalPrice: 0
   };
-  // totalPrice: number[] = [];
+  products: Product[] = JSON.parse(localStorage.getItem('products') ?? '[]');
 
   constructor(private httpService: HttpService) {
 
@@ -32,7 +33,7 @@ export class CartService {
     // get carts from local storage
     const cartStorage: Cart[] = this.getCarts();
 
-    const itemExist = cartStorage.find((value, index, all) => {
+    const itemExist = cartStorage.find((value) => {
       return value.product_id == item.product_id;
     });
 
@@ -66,24 +67,26 @@ export class CartService {
     this.cartDataSource.next(this.getCarts());
   }
 
-  getTotalAmountInCart(): number {
-    const totalPrice: number[] = [];
-    
-    this.getCarts().forEach(async(item) => {
-      const product = await this.httpService.getProduct(item.product_id);
-      // this.totalPrice.push(product.price * item.quantity);
-      totalPrice.push(product.price * item.quantity);
+  getProducts(){
+    this.httpService.getProducts().subscribe((data)=>{
+      localStorage.setItem('products', JSON.stringify(data));
     });
-
-    return this.sumArr(totalPrice);
   }
 
-  sumArr(arr: number[]): number{
-    return arr.reduce((pre, item) => pre + item);
+  getTotalAmountInCart(): number {
+    let totalPrice: number = 0;
+    this.getProducts();
+
+    this.getCarts().forEach((item) => {
+      const product = this.products.find((xItem)=> xItem.id == item.product_id) as Product;
+      totalPrice += (product.price * item.quantity);
+    });
+
+    return totalPrice;
   }
 
   getCarts(): Cart[] {
-    const carts: Cart[] = JSON.parse(localStorage.getItem('carts') as string) ?? [] ;
+    const carts: Cart[] = JSON.parse(localStorage.getItem('carts') ?? '[]');
     return carts;
   }
 

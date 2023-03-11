@@ -22,7 +22,6 @@ export class CartComponent implements OnInit {
 
   ngOnInit() {
     this.cartProducts = this.cartService.getCartsWithProduct();
-
     this.totalPrice = this.cartService.getTotalAmountInCart();
   }
 
@@ -57,9 +56,7 @@ export class CartComponent implements OnInit {
     }else{
       this.cartService.addToCart(cart);
     }
-
-    // this.cartService.getTotalAmountInCart();
-    // this.totalPrice = this.cartService.sumArr(this.cartService.totalPrice);
+    
     this.totalPrice = this.cartService.getTotalAmountInCart();
   }
 }
