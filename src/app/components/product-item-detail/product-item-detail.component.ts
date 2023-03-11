@@ -1,9 +1,11 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import  * as Sicon  from '@fortawesome/free-solid-svg-icons';
 import { Product } from 'src/app/models/product';
 import { HttpService } from 'src/app/services/http.service';
+import { Cart } from 'src/app/models/cart';
+import { CartService } from 'src/app/services/cart.service';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-product-item-detail',
@@ -11,11 +13,12 @@ import { HttpService } from 'src/app/services/http.service';
   styleUrls: ['./product-item-detail.component.css', '../product-item/product-item.component.css']
 })
 export class ProductItemDetailComponent implements OnInit  {
+  base_url = '';
   product: Product;
   Sicon = Sicon;
   pid: number = 0;
 
-  constructor(private route: ActivatedRoute, private httpService: HttpService){
+  constructor(private app: AppComponent, private route: ActivatedRoute, private httpService: HttpService,  private cartService: CartService){
     this.product = {
       id: 1,
       name: '',
@@ -27,6 +30,8 @@ export class ProductItemDetailComponent implements OnInit  {
   }
 
   async ngOnInit(): Promise<void> {
+    this.base_url = this.app.base_url;
+
     // get route param
     this.route.params.subscribe(params => {
       if(params['id'])
@@ -35,6 +40,11 @@ export class ProductItemDetailComponent implements OnInit  {
 
     // get all products
     this.product = await this.httpService.getProduct(this.pid);
+  }
+
+  productToCart(cart: Cart){
+    this.cartService.addToCart(cart);
+    alert(`${cart.quantity} quantity of ${this.product.name} added to cart`);
   }
 
 }

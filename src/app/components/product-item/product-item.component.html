@@ -11,7 +11,7 @@
 
   <ul class="card-action-buttons">
     <li class="">
-      <a href="https://www.facebook.com/sharer/sharer.php?u=/products/{{ product.id }}" target="_blank"
+      <a href="https://www.facebook.com/sharer/sharer.php?u={{ base_url }}/products/{{ product.id }}" target="_blank"
         class="btn-floating rounded-circle waves-effect waves-light white">
         <fa-icon style="color: #984CF3;" [icon]="Sicon.faShareAlt"></fa-icon>
       </a>
@@ -30,7 +30,7 @@
     <div class="row">
       <div class="border-top pt-2" style="width: 98%; margin: auto;">
         <div class="actions d-flex align-items-center">
-          <app-add-to-cart-form class="w-100" [product]="product" ></app-add-to-cart-form>
+          <app-add-to-cart-form (addToCart)="productToCart($event)" class="w-100" [product]="product" ></app-add-to-cart-form>
         </div>
       </div>
     </div>

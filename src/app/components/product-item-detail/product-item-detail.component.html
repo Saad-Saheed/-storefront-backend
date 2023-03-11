@@ -13,7 +13,7 @@
 
         <ul class="card-action-buttons">
           <li class="">
-            <a href="https://www.facebook.com/sharer/sharer.php?u=/products/{{ product.id }}" target="_blank"
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ base_url}}/products/{{ product.id }}" target="_blank"
               class="btn-floating rounded-circle waves-effect waves-light white">
               <fa-icon style="color: #984CF3;" [icon]="Sicon.faShareAlt"></fa-icon>
             </a>
@@ -36,7 +36,7 @@
                   <fa-icon style="color: #f34c76;" [icon]="Sicon.faAngleDoubleLeft" size="lg"></fa-icon>
                   Back
                 </a>
-                <app-add-to-cart-form class="w-auto" [product]="product"></app-add-to-cart-form>
+                <app-add-to-cart-form (addToCart)="productToCart($event)" class="w-auto" [product]="product"></app-add-to-cart-form>
               </div>
             </div>
           </div>

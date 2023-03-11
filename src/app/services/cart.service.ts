@@ -1,18 +1,32 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Cart } from '../models/cart';
 import { CartProduct } from '../models/cartproduct';
+import { Checkout } from '../models/checkout';
 import { HttpService } from './http.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  public cartItem: Cart[] = [];
-  constructor(private httpService: HttpService) { }
+
+  private checkoutData: Checkout = {
+    fullname: '',
+    address: '',
+    creditcard: 0,
+    totalPrice: 0
+  };
+  totalPrice: number[] = [];
+  public cartItem: Cart[] = [{ product_id: 1, quantity: 1 }, { product_id: 3, quantity: 2 }, { product_id: 2, quantity: 1 }];
+
+  constructor(private httpService: HttpService) {
+
+  }
 
   private cartDataSource = new BehaviorSubject(this.cartItem);
   currentCarts = this.cartDataSource.asObservable();
+
+  private checkoutDataSource = new BehaviorSubject(this.checkoutData);
 
   // add new product and update existing product in the cart
   addToCart(item: Cart): void {
@@ -31,15 +45,7 @@ export class CartService {
     // return this.cartItem;
   }
 
-  getTotalAmountInCart(): number {
-    let totalPrice: number = 0;
 
-    this.cartItem.forEach(async (item) => {
-      const product = await this.httpService.getProduct(item.product_id);
-      totalPrice += product.price;
-    });
-    return totalPrice;
-  }
 
   // delete product from cart
   deleteCart(product_id: number): void {
@@ -47,14 +53,30 @@ export class CartService {
     this.cartDataSource.next(this.cartItem);
   }
 
+  getTotalAmountInCart() {
+    // const totalPrice: number[] = [];
+    this.totalPrice = [];
+    this.cartItem.forEach(async(item) => {
+      const product = await this.httpService.getProduct(item.product_id);
+      this.totalPrice.push(product.price * item.quantity);
+      // totalPrice.push(product.price * item.quantity);
+    });
+
+    // return this.sumArr(totalPrice);
+  }
+
+  sumArr(arr: number[]): number{
+    return arr.reduce((pre, item) => pre + item);
+  }
+
   getCarts(): Cart[] {
     return this.cartItem;
   }
 
-  async getCartsWithProduct(): Promise<CartProduct[]> {
+  getCartsWithProduct(): CartProduct[] {
     const pC: CartProduct[] = [];
-    // Promise<CartProduct[]>
-    this.cartItem.forEach(async (item) => {
+      // Promise<CartProduct[]>
+    this.cartItem.forEach(async(item) => {
       const product = await this.httpService.getProduct(item.product_id);
       pC.unshift({
         product_id: product.id,
@@ -68,6 +90,14 @@ export class CartService {
     });
 
     return pC;
+  }
+
+  setCheckoutFormData(data: Checkout){
+    this.checkoutData = data;
+    this.checkoutDataSource.next(this.checkoutData);
+  }
+  getCheckoutFormData(): Observable<Checkout>{
+    return this.checkoutDataSource.asObservable();
   }
 
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Cart } from 'src/app/models/cart';
 import { CartProduct } from 'src/app/models/cartproduct';
+import { Checkout } from 'src/app/models/checkout';
 import { CartService } from 'src/app/services/cart.service';
 
 @Component({
@@ -19,20 +20,25 @@ export class CartComponent implements OnInit {
 
   constructor(private router: Router, public cartService: CartService){}
 
-  async ngOnInit() {
+  ngOnInit() {
 
-    this.cartProducts = await this.cartService.getCartsWithProduct();
-    this.totalPrice = this.cartService.getTotalAmountInCart();
+    this.cartProducts = this.cartService.getCartsWithProduct();
+    this.cartService.getTotalAmountInCart();
+    this.totalPrice = this.cartService.sumArr(this.cartService.totalPrice);
   }
 
-  checkOut(): void{
+  oncheckOut(): void{
     this.router.navigate(['confirmation']);
-    // const cart: Cart = {
-    //   product_id
-    // }
+    const data: Checkout = {
+      fullname: this.fullname,
+      address: this.address,
+      creditcard: parseInt(this.creditcard),
+      totalPrice: this.totalPrice
+    }
+    this.cartService.setCheckoutFormData(data);
   }
 
-  async updateCart(product_id: number, newQuantity: string){
+  updateCart(product_id: number, newQuantity: string){
     const cart: Cart = {
       product_id: product_id,
       quantity: parseInt(newQuantity)
@@ -50,7 +56,8 @@ export class CartComponent implements OnInit {
       this.cartService.addToCart(cart);
     }
 
-    // this.totalPrice = this.cartService.getTotalAmountInCart();
+    this.cartService.getTotalAmountInCart();
+    this.totalPrice = this.cartService.sumArr(this.cartService.totalPrice);
   }
 
     // setTimeout(async() => {

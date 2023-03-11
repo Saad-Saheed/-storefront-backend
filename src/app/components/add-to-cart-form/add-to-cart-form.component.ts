@@ -11,7 +11,7 @@ import { CartService } from 'src/app/services/cart.service';
 export class AddToCartFormComponent {
   public quantity: number = 1;
   @Input() product: Product;
-  // @Output() totalCart: EventEmitter<number> =  new EventEmitter();
+  @Output() addToCart: EventEmitter<Cart> =  new EventEmitter();
 
   constructor(private cartService: CartService){
     this.product = {
@@ -29,13 +29,10 @@ export class AddToCartFormComponent {
       product_id: this.product.id,
       quantity: parseInt(this.quantity.toString())
     };
-    this.cartService.addToCart(cart);
-    alert(`${cart.quantity} quantity of ${this.product.name} added to cart`);
-
-    // this.cartQty();
-
     // clear quantity
     this.quantity = 1;
+    
+    this.addToCart.emit(cart);
   }
 
   // cartQty():void{
