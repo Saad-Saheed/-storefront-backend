@@ -21,14 +21,12 @@ export class CartComponent implements OnInit {
   constructor(private router: Router, public cartService: CartService){}
 
   ngOnInit() {
-
     this.cartProducts = this.cartService.getCartsWithProduct();
-    this.cartService.getTotalAmountInCart();
-    this.totalPrice = this.cartService.sumArr(this.cartService.totalPrice);
+
+    this.totalPrice = this.cartService.getTotalAmountInCart();
   }
 
   oncheckOut(): void{
-    this.router.navigate(['confirmation']);
     const data: Checkout = {
       fullname: this.fullname,
       address: this.address,
@@ -36,6 +34,11 @@ export class CartComponent implements OnInit {
       totalPrice: this.totalPrice
     }
     this.cartService.setCheckoutFormData(data);
+
+    // clear all the cart item
+    this.cartService.deleteAllCart();
+
+    this.router.navigate(['confirmation']);
   }
 
   updateCart(product_id: number, newQuantity: string){
@@ -50,20 +53,13 @@ export class CartComponent implements OnInit {
 
       // delete product from the cart in the CartService
       this.cartService.deleteCart(cart.product_id);
-
       alert(`Product removed from cart`);
     }else{
       this.cartService.addToCart(cart);
     }
 
-    this.cartService.getTotalAmountInCart();
-    this.totalPrice = this.cartService.sumArr(this.cartService.totalPrice);
+    // this.cartService.getTotalAmountInCart();
+    // this.totalPrice = this.cartService.sumArr(this.cartService.totalPrice);
+    this.totalPrice = this.cartService.getTotalAmountInCart();
   }
-
-    // setTimeout(async() => {
-    //   this.totalPrice  = this.cartProducts.reduce((accumulator, item) => {
-    //     return accumulator + (item.price * item.quantity);
-    //    }, 0);
-    // }, 300);
-
 }

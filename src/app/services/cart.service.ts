@@ -16,53 +16,66 @@ export class CartService {
     creditcard: 0,
     totalPrice: 0
   };
-  totalPrice: number[] = [];
-  public cartItem: Cart[] = [{ product_id: 1, quantity: 1 }, { product_id: 3, quantity: 2 }, { product_id: 2, quantity: 1 }];
+  // totalPrice: number[] = [];
 
   constructor(private httpService: HttpService) {
 
   }
 
-  private cartDataSource = new BehaviorSubject(this.cartItem);
+  private cartDataSource = new BehaviorSubject(this.getCarts());
   currentCarts = this.cartDataSource.asObservable();
 
   private checkoutDataSource = new BehaviorSubject(this.checkoutData);
 
   // add new product and update existing product in the cart
   addToCart(item: Cart): void {
+    // get carts from local storage
+    const cartStorage: Cart[] = this.getCarts();
 
-    const itemExist = this.cartItem.find((value, index, all) => {
+    const itemExist = cartStorage.find((value, index, all) => {
       return value.product_id == item.product_id;
     });
 
     if (itemExist) {
       itemExist.quantity = item.quantity;
     } else {
-      this.cartItem.unshift(item);
+      cartStorage.unshift(item);
     }
 
-    this.cartDataSource.next(this.cartItem);
-    // return this.cartItem;
+    // update carts with updates
+    localStorage.setItem('carts', JSON.stringify(cartStorage));
+
+    // observe getCarts() for changes
+    this.cartDataSource.next(this.getCarts());
+
   }
-
-
 
   // delete product from cart
   deleteCart(product_id: number): void {
-    this.cartItem = this.cartItem.filter((item) => item.product_id != product_id);
-    this.cartDataSource.next(this.cartItem);
+    const cartStorage = this.getCarts().filter((item) => item.product_id != product_id);
+    // update carts with updates
+    localStorage.setItem('carts', JSON.stringify(cartStorage));
+
+    // observe getCarts() for changes
+    this.cartDataSource.next(this.getCarts());
   }
 
-  getTotalAmountInCart() {
-    // const totalPrice: number[] = [];
-    this.totalPrice = [];
-    this.cartItem.forEach(async(item) => {
+  deleteAllCart(){
+    localStorage.removeItem('carts');
+    // observe getCarts() for changes
+    this.cartDataSource.next(this.getCarts());
+  }
+
+  getTotalAmountInCart(): number {
+    const totalPrice: number[] = [];
+    
+    this.getCarts().forEach(async(item) => {
       const product = await this.httpService.getProduct(item.product_id);
-      this.totalPrice.push(product.price * item.quantity);
-      // totalPrice.push(product.price * item.quantity);
+      // this.totalPrice.push(product.price * item.quantity);
+      totalPrice.push(product.price * item.quantity);
     });
 
-    // return this.sumArr(totalPrice);
+    return this.sumArr(totalPrice);
   }
 
   sumArr(arr: number[]): number{
@@ -70,13 +83,14 @@ export class CartService {
   }
 
   getCarts(): Cart[] {
-    return this.cartItem;
+    const carts: Cart[] = JSON.parse(localStorage.getItem('carts') as string) ?? [] ;
+    return carts;
   }
 
   getCartsWithProduct(): CartProduct[] {
     const pC: CartProduct[] = [];
       // Promise<CartProduct[]>
-    this.cartItem.forEach(async(item) => {
+    this.getCarts().forEach(async(item) => {
       const product = await this.httpService.getProduct(item.product_id);
       pC.unshift({
         product_id: product.id,
