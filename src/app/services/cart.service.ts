@@ -67,7 +67,7 @@ export class CartService {
     this.cartDataSource.next(this.getCarts());
   }
 
-  getProducts(){
+  saveProductsToStorage(){
     this.httpService.getProducts().subscribe((data)=>{
       localStorage.setItem('products', JSON.stringify(data));
       this.products = JSON.parse(localStorage.getItem('products') ?? '[]');
@@ -77,7 +77,7 @@ export class CartService {
 
   getTotalAmountInCart(): number {
     let totalPrice: number = 0;
-    this.getProducts();
+    this.saveProductsToStorage();
 
     this.getCarts().forEach((item) => {
       const product = this.products.find((xItem)=> xItem.id == item.product_id) as Product;
