@@ -70,7 +70,9 @@ export class CartService {
   getProducts(){
     this.httpService.getProducts().subscribe((data)=>{
       localStorage.setItem('products', JSON.stringify(data));
+      this.products = JSON.parse(localStorage.getItem('products') ?? '[]');
     });
+
   }
 
   getTotalAmountInCart(): number {

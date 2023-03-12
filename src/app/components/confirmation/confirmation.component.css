@@ -7,7 +7,6 @@
 .heading-border:before,
 .heading-border:after {
     content: '';
-    /* margin: 0 8px; */
     flex: 1;
     -ms-flex: 1;
     height: 0;
@@ -41,12 +40,9 @@
 
 .see-more{
   display: inline-block;
-  /* width: 100%; */
   color: #fff;
   text-decoration: none;
   padding: 10px 12px;
   text-align: center;
-  /* margin-top: 20px; */
-  /* padding: 0 !important; */
   background-color: #984CF3;
 }

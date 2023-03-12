@@ -56,7 +56,7 @@ export class CartComponent implements OnInit {
     }else{
       this.cartService.addToCart(cart);
     }
-    
+
     this.totalPrice = this.cartService.getTotalAmountInCart();
   }
 }

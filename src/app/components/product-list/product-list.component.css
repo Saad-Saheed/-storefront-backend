@@ -1,16 +1,3 @@
-/* .product-index {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  max-width: 1024px;
-  margin-bottom: 64px;
-}
-
-.product-container {
-  display: flex;
-  justify-content: center;
-} */
-
 /* start section heading */
 
 .heading-border.section-title:before,
@@ -49,5 +36,5 @@
   .heading-border.section-title:after {
       margin: 0 1.5rem;
   }
-  
+
 }
